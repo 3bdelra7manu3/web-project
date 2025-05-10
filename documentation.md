@@ -13,7 +13,7 @@
 
 ## Overview
 
-"My Health" is a personal health management web application built using PHP, MySQL, JavaScript, and Bootstrap. It helps users track various aspects of their health, including reminders, appointments, and medications.
+"My Health" is a simplified personal health management web application built using PHP, MySQL, JavaScript, and Bootstrap. It helps users track various aspects of their health, focusing on appointments and medications. The application has been designed with a beginner-friendly code structure for easy understanding and maintenance.
 
 ## Installation
 
@@ -35,18 +35,13 @@
 - User registration with email validation
 - Secure login system with password hashing
 - Session management for authenticated users
+- Combined authentication system in a single file for simplified management
 
 ### Dashboard
-- Overview of upcoming reminders and appointments
-- Quick statistics on active medications, upcoming appointments, and reminders
+- Overview of upcoming appointments
+- Quick statistics on active medications and upcoming appointments
 - Medication status and dose tracking
 - Refill alerts for medications running low
-
-### Reminders
-- Create, view, edit, and delete health reminders
-- Set specific dates and times for reminders
-- Add detailed descriptions for each reminder
-- Track past and upcoming reminders
 
 ### Appointments
 - Schedule appointments with healthcare providers
@@ -66,51 +61,28 @@
 
 ### Main Files
 - `index.php`: Login and registration page
+- `config.php`: Database connection and table setup
+- `auth.php`: Combined file handling login, registration, and logout
 - `dashboard.php`: Main dashboard with overview of health data
-- `reminders.php`: For managing health reminders
-- `appointments.php`: For managing doctor appointments
-- `medications.php`: For managing medications and logging doses
-
-### Includes Directory
-- `db_connect.php`: Database connection script
-- `create_tables.php`: Creates database tables if they don't exist
-- `db_setup.php`: Initial database setup script
-- `login_process.php`: Handles user login
-- `register_process.php`: Handles user registration
-- `reminder_process.php`: Processes reminder actions
-- `appointment_process.php`: Processes appointment actions
-- `medication_process.php`: Processes medication actions
-- `logout.php`: Handles user logout
+- `appointments.php`: For managing doctor appointments (integrated processing)
+- `medications.php`: For managing medications and logging doses (integrated processing)
 
 ### Assets Directory
-- `css/style.css`: Custom styling for the application
-
-### JS Directory
-- `app.js`: Contains JavaScript functionality for the application
+- `assets/css/`: Contains stylesheets for the application
+- `assets/js/app.js`: Contains JavaScript functionality for the application
 
 ## Database Structure
+
+The application uses a simple database structure with three main tables. The database is automatically created and tables are set up when you first access the application through the `config.php` file.
 
 ### Users Table
 ```sql
 CREATE TABLE users (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,  -- Securely hashed passwords
     email VARCHAR(100) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)
-```
-
-### Reminders Table
-```sql
-CREATE TABLE reminders (
-    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT(11) NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    description TEXT,
-    reminder_date DATETIME NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
 )
 ```
 
@@ -118,13 +90,13 @@ CREATE TABLE reminders (
 ```sql
 CREATE TABLE appointments (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT(11) NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    doctor VARCHAR(100),
-    location VARCHAR(100),
-    notes TEXT,
-    appointment_date DATETIME NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INT(11) NOT NULL,        -- Links to the user who owns this appointment
+    title VARCHAR(100) NOT NULL,     -- Appointment title
+    doctor VARCHAR(100),             -- Doctor name
+    location VARCHAR(100),           -- Where the appointment is
+    notes TEXT,                      -- Any additional information
+    appointment_date DATETIME NOT NULL, -- When the appointment is scheduled
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- When this record was created
     FOREIGN KEY (user_id) REFERENCES users(id)
 )
 ```
@@ -133,17 +105,17 @@ CREATE TABLE appointments (
 ```sql
 CREATE TABLE medications (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT(11) NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    dosage VARCHAR(50) NOT NULL,
-    frequency VARCHAR(100) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE,
-    instructions TEXT,
-    remaining INT(11),
-    refill_reminder BOOLEAN DEFAULT 0,
-    refill_reminder_threshold INT(5) DEFAULT 5,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INT(11) NOT NULL,           -- Links to the user who owns this medication
+    name VARCHAR(100) NOT NULL,         -- Medication name
+    dosage VARCHAR(50) NOT NULL,        -- How much to take (e.g., "100mg")
+    frequency VARCHAR(100) NOT NULL,    -- How often to take it
+    start_date DATE NOT NULL,           -- When to start taking this
+    end_date DATE,                      -- When to stop taking this (optional)
+    instructions TEXT,                  -- Any additional instructions
+    remaining INT(11),                  -- Pills remaining (optional)
+    refill_reminder BOOLEAN DEFAULT 0,  -- Whether to remind about refills
+    refill_reminder_threshold INT(5) DEFAULT 5, -- At what count to show reminder
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- When this record was created
     FOREIGN KEY (user_id) REFERENCES users(id)
 )
 ```
@@ -152,11 +124,11 @@ CREATE TABLE medications (
 ```sql
 CREATE TABLE medication_logs (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    medication_id INT(11) NOT NULL,
-    user_id INT(11) NOT NULL,
-    taken_at DATETIME NOT NULL,
-    notes TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    medication_id INT(11) NOT NULL,      -- Links to the medication taken
+    user_id INT(11) NOT NULL,            -- Links to the user who took it
+    taken_at DATETIME NOT NULL,          -- When it was taken
+    notes TEXT,                          -- Any notes about taking it
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- When this log was created
     FOREIGN KEY (medication_id) REFERENCES medications(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 )
@@ -230,51 +202,78 @@ CREATE TABLE medication_logs (
 
 ## PHP Functions & Methods
 
-### Database Functions
-- `mysqli_connect()`: Establishes database connection
-- `prepare()`: Prepares SQL statement for execution
-- `bind_param()`: Binds variables to a prepared statement
-- `execute()`: Executes a prepared statement
-- `get_result()`: Gets a result set from a prepared statement
-- `fetch_assoc()`: Fetches a result row as an associative array
-- `query()`: Executes an SQL query
+### Core Files
+- `config.php`: Sets up database connection and creates tables if needed
+- `auth.php`: Handles all authentication functions (login, register, logout)
 
-### Session Functions
-- `session_start()`: Starts a new or resumes existing session
-- `session_destroy()`: Destroys all data registered to a session
+### Main Processing Functions
 
-### String Functions
-- `htmlspecialchars()`: Converts special characters to HTML entities
-- `password_hash()`: Creates a password hash
-- `password_verify()`: Verifies that a password matches a hash
-- `nl2br()`: Inserts HTML line breaks before all newlines
-- `date()`: Formats a local date and time
+#### Authentication (auth.php)
+- Login processing: Validates credentials and starts user session
+- Registration: Validates and creates new user accounts
+- Logout: Destroys user session
 
-### Array Functions
+#### Appointments (appointments.php)
+- Add appointment: Adds a new appointment record
+- Update appointment: Modifies an existing appointment
+- Delete appointment: Removes an appointment
+- Verify ownership: Security check to ensure users only access their own data
+
+#### Medications (medications.php)
+- Add medication: Adds a new medication record
+- Update medication: Modifies an existing medication
+- Delete medication: Removes a medication and related logs
+- Log dose: Records when medication is taken
+- Update remaining: Updates pill count
+- Verify ownership: Reusable function to check medication belongs to current user
+
+### Helper Functions
+- `verifyMedicationOwnership()`: Ensures users can only access their own medications
+- `formatDate()`: Formats date for display (app.js)
+- `setActiveNavLink()`: Highlights active navigation link (app.js)
 - `count()`: Counts elements in an array
 - `empty()`: Determines whether a variable is empty
 - `isset()`: Determines if a variable is set and is not NULL
 
 ## Security Considerations
 
-The application implements several security measures:
+### Input Validation
+- All user inputs are validated server-side before processing
+- Required fields are checked to prevent empty submissions
+- Email format validation for registration
 
-1. **Password Hashing**: All user passwords are hashed using PHP's password_hash function
-2. **Prepared Statements**: SQL injection protection using prepared statements
-3. **Session Validation**: Every page validates if the user is logged in
-4. **Cross-Site Scripting (XSS) Protection**: User inputs are sanitized before output
-5. **Form Validation**: Server-side validation of all form inputs
+### SQL Injection Prevention
+- Prepared statements used for all database queries
+- Parameter binding to separate SQL code from user input
+- No direct inclusion of user input in SQL queries
+
+### Authentication & Authorization
+- Passwords are securely hashed using PHP's `password_hash()` function
+- Password verification using `password_verify()`
+- Session management to maintain login state
+- Ownership verification to ensure users only access their own data
+
+### Output Sanitization
+- Data is sanitized before display with `htmlspecialchars()`
+- Prevents XSS (Cross-Site Scripting) attacks
 
 ## Future Enhancements
 
-Potential future enhancements for the application:
+### Possible Features
+- Email notifications for upcoming appointments
+- Improved medication schedule visualization
+- Data export functionality (PDF, CSV)
+- Medication interaction warnings
+- Doctor/pharmacy contact management
+- Health metrics tracking (weight, blood pressure, etc.)
+- Calendar integration with Google/Apple calendars
+- Prescription refill tracking and reminders
 
-1. **Mobile App Version**: Creating a mobile app for more convenient access
-2. **Health Metrics Tracking**: Adding ability to track weight, blood pressure, etc.
-3. **Document Storage**: Storing health records and documents
-4. **Calendar Integration**: Integration with Google/Apple calendars
-5. **Push Notifications**: Real-time reminders for medications and appointments
-6. **Doctor Directory**: Building a searchable doctor/healthcare provider directory
-7. **Export/Import Data**: Allow users to export or import their health data
-8. **Dark Mode**: Add a dark mode option for the UI
-9. **Multi-language Support**: Add support for multiple languages
+### Technical Improvements
+- AJAX for smoother user experience without page reloads
+- Responsive design improvements for mobile devices
+- Improved data visualization with charts
+- Accessibility enhancements
+- More detailed error handling and user feedback
+- Dark mode option for the UI
+- Multi-language support
