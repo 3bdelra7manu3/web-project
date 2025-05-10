@@ -1,19 +1,21 @@
-# My Health Application Documentation
+# تطبيق رعايتي الصحية - توثيق التطبيق
 
-## Table of Contents
-1. [Overview](#overview)
-2. [Installation](#installation)
-3. [Features](#features)
-4. [File Structure](#file-structure)
-5. [Database Structure](#database-structure)
-6. [Bootstrap Classes Explained](#bootstrap-classes-explained)
-7. [PHP Functions & Methods](#php-functions--methods)
-8. [Security Considerations](#security-considerations)
-9. [Future Enhancements](#future-enhancements)
+## جدول المحتويات
+1. [نظرة عامة](#overview)
+2. [التثبيت](#installation)
+3. [المميزات](#features)
+4. [هيكل الملفات](#file-structure)
+5. [هيكل قاعدة البيانات](#database-structure)
+6. [شرح فئات Bootstrap](#bootstrap-classes-explained)
+7. [وظائف وطرق PHP](#php-functions--methods)
+8. [اعتبارات الأمان](#security-considerations)
+9. [تحسينات مستقبلية](#future-enhancements)
+10. [دعم اللغة العربية](#arabic-support)
+11. [الوضع المظلم](#dark-mode)
 
-## Overview
+## نظرة عامة <a name="overview"></a>
 
-"My Health" is a simplified personal health management web application built using PHP, MySQL, JavaScript, and Bootstrap. It helps users track various aspects of their health, focusing on appointments and medications. The application has been designed with a beginner-friendly code structure for easy understanding and maintenance.
+"رعايتي" هو تطبيق ويب مبسط لإدارة الصحة الشخصية تم بناؤه باستخدام PHP وMySQL وJavaScript وBootstrap. يساعد المستخدمين على تتبع مختلف جوانب صحتهم، مع التركيز على المواعيد والأدوية. تم تصميم التطبيق بهيكل كود سهل الفهم للمبتدئين لسهولة الفهم والصيانة. يدعم التطبيق اللغة العربية بشكل كامل ويوفر وضع مظلم لتحسين تجربة المستخدم.
 
 ## Installation
 
@@ -29,47 +31,62 @@
 5. The database will be automatically created on first access
 6. Register for a new account and start using the application
 
-## Features
+## المميزات <a name="features"></a>
 
-### User Authentication
-- User registration with email validation
-- Secure login system with password hashing
-- Session management for authenticated users
-- Combined authentication system in a single file for simplified management
+### مصادقة المستخدم
+- تسجيل المستخدم مع التحقق من البريد الإلكتروني
+- نظام تسجيل دخول آمن مع تشفير كلمات المرور
+- إدارة الجلسات للمستخدمين المصادق عليهم
+- نظام مصادقة موحد في ملف واحد لإدارة مبسطة
 
-### Dashboard
-- Overview of upcoming appointments
-- Quick statistics on active medications and upcoming appointments
-- Medication status and dose tracking
-- Refill alerts for medications running low
+### لوحة التحكم
+- نظرة عامة على المواعيد القادمة
+- إحصائيات سريعة عن الأدوية النشطة والمواعيد القادمة
+- تتبع حالة الدواء والجرعات
+- تنبيهات إعادة التعبئة للأدوية التي توشك على النفاد
 
-### Appointments
-- Schedule appointments with healthcare providers
-- Record appointment details including doctor, location, and notes
-- Easily view upcoming appointments
-- Keep history of past appointments
+### المواعيد
+- جدولة المواعيد مع مقدمي الرعاية الصحية
+- تسجيل تفاصيل الموعد بما في ذلك الطبيب والموقع والملاحظات
+- عرض المواعيد القادمة بسهولة
+- الاحتفاظ بسجل المواعيد السابقة
 
-### Medications
-- Track medications with dosage, frequency, and instructions
-- Log when you take each medication dose
-- Monitor remaining pill supply
-- Get alerts when refills are needed
-- View medication history
-- Quick log doses from dashboard
+### الأدوية
+- تتبع الأدوية مع الجرعة والتكرار والتعليمات
+- تسجيل وقت تناول كل جرعة دواء
+- مراقبة المخزون المتبقي من الحبوب
+- الحصول على تنبيهات عند الحاجة إلى إعادة التعبئة
+- عرض سجل الأدوية
+- تسجيل سريع للجرعات من لوحة التحكم
 
-## File Structure
+### دعم اللغة العربية
+- واجهة مستخدم كاملة باللغة العربية
+- دعم RTL للتنسيق العربي
+- عرض التواريخ والأوقات بالتنسيق العربي
 
-### Main Files
-- `index.php`: Login and registration page
-- `config.php`: Database connection and table setup
-- `auth.php`: Combined file handling login, registration, and logout
-- `dashboard.php`: Main dashboard with overview of health data
-- `appointments.php`: For managing doctor appointments (integrated processing)
-- `medications.php`: For managing medications and logging doses (integrated processing)
+### الوضع المظلم
+- تصميم مظلم كامل لراحة العين
+- ألوان متناسقة للنص والخلفية
+- تحسين تجربة المستخدم في الإضاءة المنخفضة
 
-### Assets Directory
-- `assets/css/`: Contains stylesheets for the application
-- `assets/js/app.js`: Contains JavaScript functionality for the application
+## هيكل الملفات <a name="file-structure"></a>
+
+### الملفات الرئيسية
+- `index.php`: صفحة تسجيل الدخول والتسجيل
+- `config.php`: اتصال قاعدة البيانات وإعداد الجداول
+- `dashboard.php`: لوحة التحكم الرئيسية مع نظرة عامة على بيانات الصحة
+- `appointments.php`: لإدارة مواعيد الطبيب (مع معالجة متكاملة)
+- `medications.php`: لإدارة الأدوية وتسجيل الجرعات (مع معالجة متكاملة)
+- `logout.php`: للخروج من التطبيق وإنهاء الجلسة
+
+### دليل الأصول
+- `assets/css/`: يحتوي على أوراق الأنماط للتطبيق
+- `assets/js/app.js`: يحتوي على وظائف JavaScript للتطبيق
+
+### ملفات اللغة
+- `lang/`: دليل ملفات اللغة
+- `lang/ar.php`: ملف ترجمات اللغة العربية
+- `lang/config.php`: ملف إعدادات اللغة
 
 ## Database Structure
 
@@ -199,6 +216,79 @@ CREATE TABLE medication_logs (
 - `shadow`: Box shadow effect
 - `rounded`: Rounded corners
 - `d-grid`: Grid layout for buttons, etc.
+
+## دعم اللغة العربية <a name="arabic-support"></a>
+
+تم تصميم التطبيق ليدعم اللغة العربية بشكل كامل، مع مراعاة الاتجاه من اليمين إلى اليسار (RTL) واستخدام تنسيقات التاريخ والوقت المناسبة للمستخدمين العرب.
+
+### نظام الترجمة
+
+يستخدم التطبيق نظامًا بسيطًا للترجمة يعتمد على الملفات التالية:
+
+- `lang/config.php`: يقوم بتعيين اللغة الافتراضية (العربية) وتحميل ملف الترجمات المناسب
+- `lang/ar.php`: يحتوي على كافة النصوص المترجمة للغة العربية كمصفوفة
+
+### طريقة استخدام الترجمات
+
+لعرض نص مترجم في التطبيق، يتم استخدام دالة `__()` كما يلي:
+
+```php
+<?php echo __('key_name'); ?>
+```
+
+حيث `key_name` هو مفتاح النص المراد ترجمته في ملف اللغة.
+
+### دعم RTL
+
+تم تطبيق دعم الاتجاه من اليمين إلى اليسار (RTL) باستخدام:
+
+- تعديل اتجاه HTML باستخدام `dir="rtl"`
+- استخدام دوال مساعدة مثل `get_align()` و `get_opposite_align()` لضمان التنسيق الصحيح للعناصر
+- تعديل هوامش العناصر لتتناسب مع الاتجاه العربي
+
+### تنسيقات التاريخ والوقت
+
+تمت ترجمة كافة تنسيقات التاريخ والوقت في التطبيق من الإنجليزية إلى العربية، بما في ذلك:
+
+- تحويل أسماء الأشهر الإنجليزية إلى أسماء الأشهر العربية
+- تحويل علامات AM/PM إلى ص/م بالعربية
+
+## الوضع المظلم <a name="dark-mode"></a>
+
+تم تنفيذ وضع مظلم كامل لتطبيق "رعايتي" لتحسين تجربة المستخدم وراحة العين، خاصة في بيئات الإضاءة المنخفضة.
+
+### التنفيذ التقني
+
+تم تنفيذ الوضع المظلم عن طريق:
+
+1. **متغيرات CSS**: تم تعريف متغيرات CSS لألوان النص والخلفية بحيث يمكن تغييرها بسهولة
+2. **تعديل النمط**: تم تطبيق ألوان الخلفية الداكنة وألوان النص الفاتحة على كافة العناصر
+3. **تناقض كافٍ**: تم الحرص على وجود تباين كافٍ بين النص والخلفية لتحسين القراءة
+
+### عناصر الواجهة المظلمة
+
+تم تطبيق الوضع المظلم على العناصر التالية:
+
+- خلفية الصفحات الرئيسية
+- البطاقات والجداول
+- النماذج وحقول الإدخال
+- أزرار التنقل وشريط التنقل
+- مربعات الحوار والتنبيهات
+
+### ألوان التصميم
+
+تستخدم الواجهة المظلمة مجموعة ألوان متناسقة تتضمن:
+
+- خلفيات داكنة مع تدرجات لطيفة لتقليل إجهاد العين
+- نصوص فاتحة مع تباين جيد للقراءة
+- ألوان أساسية زاهية (الأزرق، الأخضر، إلخ) للعناصر التفاعلية
+- ألوان ثانوية متناسقة للعناصر الأقل أهمية
+
+### تحسينات إضافية
+
+- تم تحسين تأثيرات التحويم (hover) والتركيز (focus) لتكون أكثر وضوحًا في الوضع المظلم
+- تم ضبط ظلال البطاقات والعناصر لتكون أكثر ملاءمة للوضع المظلم
+- تم تعديل ألوان الشارات والأزرار لضمان وضوحها على الخلفيات الداكنة
 
 ## PHP Functions & Methods
 
